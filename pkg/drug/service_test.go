@@ -1,1 +1,1 @@
-package boilerplate_test
+package drug_test

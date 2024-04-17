@@ -1,1 +1,1 @@
-package boilerplate_test
+package vaccination_test

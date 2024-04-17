@@ -1,21 +1,43 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
+
+	"github.com/sail3/interfell-vaccinations/internal/config"
+	"github.com/sail3/interfell-vaccinations/internal/db/postgres"
 	"github.com/sail3/interfell-vaccinations/internal/transport"
-	"github.com/sail3/interfell-vaccinations/pkg/boilerplate"
+	"github.com/sail3/interfell-vaccinations/pkg/drug"
+	"github.com/sail3/interfell-vaccinations/pkg/vaccination"
 )
 
 func main() {
+	conf := config.New()
 
-	br := boilerplate.NewRepository()
-	bs := boilerplate.NewService(br)
-	bh := boilerplate.NewHandler(bs)
+	err := doMigrate(conf.DbURL)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	db := postgres.NewPostgresClient(conf.DbURL)
 
-	r := transport.NewHTTPRouter(bh)
+	dr := drug.NewRepository(db.DB)
+	ds := drug.NewService(dr)
+	dh := drug.NewHandler(ds)
+
+	vr := vaccination.NewRepository(db.DB)
+	vs := vaccination.NewService(vr)
+	vh := vaccination.NewHandler(vs)
+
+	r := transport.NewHTTPRouter(dh, vh)
 	srv := http.Server{
 		Addr:         "0.0.0.0:8080",
 		WriteTimeout: time.Second * 15,
@@ -27,8 +49,19 @@ func main() {
 	srv.ListenAndServe()
 }
 
-func router() http.Handler {
-	r := chi.NewRouter()
+const migrationsRootFolder = "file://migrations"
 
-	return r
+func doMigrate(databaseURL string) error {
+	m, err := migrate.New(
+		migrationsRootFolder,
+		databaseURL,
+	)
+	if err != nil {
+		return err
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return err
+	}
+	return nil
 }

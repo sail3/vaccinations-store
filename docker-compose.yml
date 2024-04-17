@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+    backend:
+        image: deuna-opp
+        env_file: .env
+        build:
+            target: builder
+            context: .
+        ports:
+            - 8080:8080
+        volumes:
+            - .:/go/src/github.com/sail3/interfell-vaccinations
+            - ./swagger:/go/src/github.com/sail3/interfell-vaccinations/swagger
+            - ./oas/oas.yml:/go/src/github.com/sail3/interfell-vaccinations/swagger/swagger.yml
+        command: gowatch -p ./cmd -o service
+        depends_on:
+            - db
+        networks: 
+            - default
+
+    db:
+        image: postgres:16.1-alpine
+        restart: always
+        ports:
+            - 15432:5432
+        environment:
+            POSTGRES_PASSWORD: 'test_password'
+            POSTGRES_USER: 'test_user'
+            POSTGRES_DB: 'test_db'
+        networks:
+            - default
+volumes:
+    # swagger named volume will be shared between service and swagger. So we can have a local swagger running
+    swagger: null

@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+/swagger
+.env
+service
+docker-compose-local.yml
+
+.DS_Store
