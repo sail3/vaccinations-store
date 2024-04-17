@@ -1,0 +1,68 @@
+openapi: "3.0.0"
+info:
+  title: Go API REST Boilerplate
+  description: Project to start an API REST in golang.
+  version: 1.0.0
+  contact:
+    name: Sail3
+    url: https://github.com/sail3
+
+servers:
+  - url: "http://localhost:18080"
+    description: Local Environment
+paths:
+  /:
+    get:
+      summary: Simple route in project.
+      responses:
+        "200":
+          description: Default route in project.
+          headers:
+            Api-Version:
+              schema:
+                type: string
+                example: c4f3d00d
+              description: API Version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexResponse"
+  /ping/{name}:
+    get:
+      summary: Simple route in project.
+      responses:
+        "200":
+          description: Default route in project.
+          headers:
+            Api-Version:
+              schema:
+                type: string
+                example: c4f3d00d
+              description: API Version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexResponse"
+  /message:
+    get:
+      summary: Simple route in project.
+      responses:
+        "200":
+          description: Default route in project.
+          headers:
+            Api-Version:
+              schema:
+                type: string
+                example: c4f3d00d
+              description: API Version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexResponse"
+
+components:
+  schemas:
+    IndexResponse:
+      properties:
+        message:
+          type: string
