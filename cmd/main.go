@@ -16,6 +16,7 @@ import (
 	"github.com/sail3/interfell-vaccinations/internal/db/postgres"
 	"github.com/sail3/interfell-vaccinations/internal/transport"
 	"github.com/sail3/interfell-vaccinations/pkg/drug"
+	"github.com/sail3/interfell-vaccinations/pkg/user"
 	"github.com/sail3/interfell-vaccinations/pkg/vaccination"
 )
 
@@ -37,7 +38,11 @@ func main() {
 	vs := vaccination.NewService(vr)
 	vh := vaccination.NewHandler(vs)
 
-	r := transport.NewHTTPRouter(dh, vh)
+	ur := user.NewRepository(db.DB)
+	us := user.NewService(ur, conf.SignatureToken)
+	uh := user.NewHandler(us)
+
+	r := transport.NewHTTPRouter(conf.SignatureToken, dh, vh, uh)
 	srv := http.Server{
 		Addr:         "0.0.0.0:8080",
 		WriteTimeout: time.Second * 15,

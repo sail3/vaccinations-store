@@ -1,10 +1,10 @@
-package boilerplate
+package user
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/sail3/interfell-vaccinations/internal/response"
 )
 
@@ -18,27 +18,44 @@ func NewHandler(s Service) Handler {
 	}
 }
 
-func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	response.ResponsdWithData(w, http.StatusOK, struct {
-		Message string `json:"message"`
-	}{
-		Message: "Boilerplate",
-	})
+func (h Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var s SignupRequest
+
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		_ = response.ResponseWithError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Println(s)
+
+	user, err := h.service.SignupService(ctx, s)
+	if err != nil {
+		_ = response.ResponseWithError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	response.ResponsdWithData(w, http.StatusOK, user)
 }
 
-func (h *Handler) Ping(w http.ResponseWriter, r *http.Request) {
-	param := chi.URLParam(r, "name")
-	response.ResponsdWithData(w, http.StatusOK, struct {
-		Message string `json:"message"`
-	}{
-		Message: fmt.Sprintf("Pong %s", param),
-	})
-}
+func (h Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	var lr LoginRequest
 
-func (h *Handler) ConsumeRepository(w http.ResponseWriter, r *http.Request) {
-	response.ResponsdWithData(w, http.StatusOK, struct {
-		Message string `json:"message"`
-	}{
-		Message: h.service.GetMessage(),
-	})
+	err := json.NewDecoder(r.Body).Decode(&lr)
+	if err != nil {
+		_ = response.ResponseWithError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	res, err := h.service.LoginService(ctx, lr)
+	if err != nil {
+		_ = response.ResponseWithError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	response.ResponsdWithData(w, http.StatusOK, res)
+
 }
