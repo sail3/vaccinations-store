@@ -1,0 +1,167 @@
+openapi: "3.0.0"
+info:
+  title: Registro de vacunas
+  description: Ejercicio de creacion de apis rest con autorizacion de rutas
+  version: 1.0.0
+  contact:
+    name: Pedro Charun
+    url: mailto:mlosail3@gmail.com
+tags:
+  - name: Usuario
+    description: Endpoints para acceder a la aplicacion.
+  - name: Drugs
+    description: Endpoints para interactuar con las medicinas en la aplicacion.
+
+servers:
+  - url: "http://localhost:18080"
+    description: Local Environment
+paths:
+  /signup:
+    post:
+      tags:
+        - Usuario
+      summary: Registra un nuevo usuario en la aplicacion.
+      requestBody:
+        description: datos para el nuevo usuario.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        "200":
+          description: Registro exitoso
+          headers:
+            Api-Version:
+              schema:
+                type: string
+                example: c4f3d00d
+              description: API Version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignupResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /login:
+    post:
+      tags:
+        - Usuario
+      summary: Crea un token de acceso para la aplicacion.
+      requestBody:
+        description: Credenciales de acceso para el usuario.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: Login
+          headers:
+            Api-Version:
+              schema:
+                type: string
+                example: c4f3d00d
+              description: API Version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /drugs:
+    post:
+      tags:
+        - Drugs
+      summary: Crea un registro de Drug.
+      requestBody:
+        description: Datos para el registro de una nueva medicina.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrugRequest'
+      responses:
+        "200":
+          description: Registra una nueva medicina.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrugReponse"
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    Error:
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    ErrorResponse:
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+    SignupRequest:
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password: 
+          type: string
+    SignupResponse:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+    LoginRequest:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      properties:
+        result:
+          type: string
+    DrugRequest:
+      properties:
+        name:
+          type: string
+        approved:
+          type: boolean
+        min_dose:
+          type: integer
+        max_dose:
+          type: integer
+        available_at:
+          type: string
+          format: date-time
+    DrugReponse:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        approved:
+          type: boolean
+        min_dose:
+          type: integer
+        max_dose:
+          type: integer
+        available_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+

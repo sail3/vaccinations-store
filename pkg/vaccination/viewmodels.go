@@ -8,9 +8,9 @@ import (
 type VaccinationRequest struct {
 	ID     int        `json:"id,omitempty"`
 	Name   string     `json:"name,omitempty"`
-	DrugID int        `json:"idDrug"`
-	Dose   int        `json:"dose"`
-	Date   CustomTime `json:"date"`
+	DrugID int        `json:"drug_id,omitempty"`
+	Dose   int        `json:"dose,omitempty"`
+	Date   CustomTime `json:"date,omitempty"`
 }
 
 type CustomTime time.Time

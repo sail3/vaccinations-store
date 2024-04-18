@@ -6,11 +6,11 @@ import (
 )
 
 type RegisterDrugRequest struct {
-	Name        string     `json:"name"`
-	Approved    bool       `json:"approved"`
-	MinDose     int        `json:"minDose"`
-	MaxDose     int        `json:"maxDose"`
-	AvailableAt CustomTime `json:"availableAt"`
+	Name        string     `json:"name,omitempty"`
+	Approved    bool       `json:"approved,omitempty"`
+	MinDose     int        `json:"min_dose,omitempty"`
+	MaxDose     int        `json:"max_dose,omitempty"`
+	AvailableAt CustomTime `json:"available_at,omitempty"`
 }
 
 type UpdateDrugRequest struct {
