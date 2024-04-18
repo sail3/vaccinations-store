@@ -2,7 +2,6 @@ package user
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/sail3/interfell-vaccinations/internal/response"
@@ -28,8 +27,6 @@ func (h Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
 		_ = response.ResponseWithError(w, http.StatusBadRequest, err)
 		return
 	}
-
-	fmt.Println(s)
 
 	user, err := h.service.SignupService(ctx, s)
 	if err != nil {

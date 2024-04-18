@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
@@ -35,7 +34,6 @@ func (s *service) SignupService(ctx context.Context, su SignupRequest) (User, er
 		Password: hex.EncodeToString(pwdHash[:]),
 	}
 	id, err := s.repository.RegisterUser(ctx, u)
-	fmt.Println(err)
 	if err != nil {
 		return User{}, err
 	}

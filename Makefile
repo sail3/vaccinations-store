@@ -1,5 +1,13 @@
+default: 
+	build
 
-run: 
-	@go run cmd/main.go
+build:
+	@docker-compose build
+
+run:
+	@docker-compose up -d
+
+down:
+	@docker-compose down --remove-orphans
 t:
-	@go test -cover ./..
+	@go test -cover ./...

@@ -2,7 +2,8 @@ package user_test
 
 import (
 	"context"
-	"os/user"
+
+	"github.com/sail3/interfell-vaccinations/pkg/user"
 )
 
 // Defined mocks to run tests

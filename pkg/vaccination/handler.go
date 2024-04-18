@@ -2,7 +2,6 @@ package vaccination
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -29,7 +28,6 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		_ = response.ResponseWithError(w, http.StatusBadRequest, err)
 		return
 	}
-	fmt.Println(d)
 	res, err := h.service.RegisterVaccination(ctx, d)
 	if err != nil {
 		_ = response.ResponseWithError(w, http.StatusInternalServerError, err)
@@ -41,7 +39,6 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	fmt.Println(ctx)
 
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -78,7 +75,6 @@ func (h *Handler) ListHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	fmt.Println(ctx)
 
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

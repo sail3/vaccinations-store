@@ -62,17 +62,19 @@ func TestService_RegisterVaccination(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		m := registerVaccinationMockRepository{
-			registerVaccinationResp: test.RegisterVaccinationResp,
-			error:                   test.RegisterVaccinationErr,
-		}
+		t.Run(test.name, func(t *testing.T) {
+			m := registerVaccinationMockRepository{
+				registerVaccinationResp: test.RegisterVaccinationResp,
+				error:                   test.RegisterVaccinationErr,
+			}
 
-		s := vaccination.NewService(m)
-		ctx := context.Background()
+			s := vaccination.NewService(m)
+			ctx := context.Background()
 
-		resp, err := s.RegisterVaccination(ctx, test.inputVacination)
-		assert.Equal(t, test.resp, resp)
-		assert.Equal(t, test.err, err)
+			resp, err := s.RegisterVaccination(ctx, test.inputVacination)
+			assert.Equal(t, test.resp, resp)
+			assert.Equal(t, test.err, err)
+		})
 	}
 }
 
@@ -131,17 +133,19 @@ func TestService_UpdateVaccination(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		m := updateVaccinationMockRepository{
-			resp: test.updateVaccinationRepoVaccination,
-			err:  test.updateVaccinationErr,
-		}
+		t.Run(test.name, func(t *testing.T) {
+			m := updateVaccinationMockRepository{
+				resp: test.updateVaccinationRepoVaccination,
+				err:  test.updateVaccinationErr,
+			}
 
-		s := vaccination.NewService(m)
-		ctx := context.Background()
+			s := vaccination.NewService(m)
+			ctx := context.Background()
 
-		resp, err := s.UpdateVaccination(ctx, test.inputID, test.inputVacination)
-		assert.Equal(t, test.resp, resp)
-		assert.Equal(t, test.err, err)
+			resp, err := s.UpdateVaccination(ctx, test.inputID, test.inputVacination)
+			assert.Equal(t, test.resp, resp)
+			assert.Equal(t, test.err, err)
+		})
 	}
 }
 
@@ -192,17 +196,19 @@ func TestService_ListVaccination(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		m := ListVaccinationRepositoryMock{
-			resp: test.listVaccinationMockVaccination,
-			err:  test.listVaccinationMockErr,
-		}
+		t.Run(test.name, func(t *testing.T) {
+			m := ListVaccinationRepositoryMock{
+				resp: test.listVaccinationMockVaccination,
+				err:  test.listVaccinationMockErr,
+			}
 
-		s := vaccination.NewService(m)
-		ctx := context.Background()
+			s := vaccination.NewService(m)
+			ctx := context.Background()
 
-		resp, err := s.ListVaccination(ctx)
-		assert.Equal(t, test.resp, resp)
-		assert.Equal(t, test.err, err)
+			resp, err := s.ListVaccination(ctx)
+			assert.Equal(t, test.resp, resp)
+			assert.Equal(t, test.err, err)
+		})
 	}
 }
 
@@ -238,15 +244,17 @@ func TestService_DeleteVaccination(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		m := DeleteVaccinationRepositoryMock{
-			err: test.deleteVaccinationMockErr,
-		}
+		t.Run(test.name, func(t *testing.T) {
+			m := DeleteVaccinationRepositoryMock{
+				err: test.deleteVaccinationMockErr,
+			}
 
-		s := vaccination.NewService(m)
-		ctx := context.Background()
+			s := vaccination.NewService(m)
+			ctx := context.Background()
 
-		err := s.DeleteVaccination(ctx, test.inputID)
-		assert.Equal(t, test.err, err)
+			err := s.DeleteVaccination(ctx, test.inputID)
+			assert.Equal(t, test.err, err)
+		})
 	}
 }
 

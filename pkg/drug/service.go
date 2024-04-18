@@ -2,7 +2,6 @@ package drug
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
@@ -32,7 +31,6 @@ func (s service) RegisterDrug(ctx context.Context, dr RegisterDrugRequest) (Drug
 		AvailableAt: time.Time(dr.AvailableAt),
 	}
 	id, err := s.repository.RegisterDrug(ctx, drug)
-	fmt.Println(err)
 	if err != nil {
 		return Drug{}, err
 	}
